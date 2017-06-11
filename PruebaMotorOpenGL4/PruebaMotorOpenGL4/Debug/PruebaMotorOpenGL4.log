@@ -1,4 +1,2 @@
-﻿  PruebaMotorOpenGL4.cpp
-e:\git\motor\pruebamotoropengl4\libs\include\objeto3d.h(123): warning C4554: '&': compruebe la prioridad de operador para posibles errores; utilice paréntesis para indicar la prioridad
-  PruebaMotorOpenGL4.vcxproj -> E:\Git\Motor\PruebaMotorOpenGL4\Debug\PruebaMotorOpenGL4.exe
-  PruebaMotorOpenGL4.vcxproj -> E:\Git\Motor\PruebaMotorOpenGL4\Debug\PruebaMotorOpenGL4.pdb (Full PDB)
+﻿  PruebaMotorOpenGL4.vcxproj -> E:\Git\MotorProyecto\PruebaMotorOpenGL4\Debug\PruebaMotorOpenGL4.exe
+  PruebaMotorOpenGL4.vcxproj -> E:\Git\MotorProyecto\PruebaMotorOpenGL4\Debug\PruebaMotorOpenGL4.pdb (Full PDB)

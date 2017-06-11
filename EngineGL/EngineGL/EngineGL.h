@@ -1,5 +1,5 @@
 #pragma once
-#ifndef  ENGINEGL_H_
+#ifndef ENGINEGL_H_
 #define ENGINEGL_H_
 #define ENGINE_GL __declspec(dllexport)
  // EngineGL_H_
@@ -18,5 +18,10 @@
 namespace EngineGL {
 
 	ENGINE_GL void InitGLContext();
+	
+
+
+
+
 }
 #endif
