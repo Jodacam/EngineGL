@@ -8,7 +8,7 @@
 using namespace std;
 int main(int argc, char **argv)
 { 
-	EngineGL::InitGLContext();
+	EngineGL::InitGLContext(argc,argv);
     return 0;
 }
 

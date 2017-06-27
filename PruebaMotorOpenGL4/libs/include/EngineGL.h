@@ -1,5 +1,5 @@
 #pragma once
-#ifndef  ENGINEGL_H_
+#ifndef ENGINEGL_H_
 #define ENGINEGL_H_
 #define ENGINE_GL __declspec(dllexport)
  // EngineGL_H_
@@ -17,8 +17,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 namespace EngineGL {
 
-	ENGINE_GL void InitGLContext();
-	ENGINE_GL void ChangeCamera(glm::mat4 positionMatrix);
+	ENGINE_GL void InitGLContext(int argc, char ** argv);
+	
 
 
 
