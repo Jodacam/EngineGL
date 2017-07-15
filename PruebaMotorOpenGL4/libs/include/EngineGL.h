@@ -15,10 +15,16 @@
 #include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Object.h"
 namespace EngineGL {
 
 	ENGINE_GL void InitGLContext(int argc, char ** argv);
 	
+	ENGINE_GL void SetIdleFunc(void(*func)());
+	
+	ENGINE_GL void SetMouseFunc(void(*func)(int button, int state, int x, int y));
+	
+	ENGINE_GL void SetMotionFunc(void(*func)(int x, int y));
 
 
 

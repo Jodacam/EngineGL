@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Object.h"
 namespace EngineGL {
 
 	ENGINE_GL void InitGLContext(int argc, char ** argv);
