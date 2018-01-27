@@ -3,12 +3,12 @@
 #define CAMERA_H_
 #include "Object.h"
 
-class Camera :Object {
+class Camera : Object {
 private:
 
 
 public:
-	Camera(glm::vec3 postion, glm::vec3 direction, bool isOrthografic);
+	Camera(glm::vec3 postion, glm::vec3 direction, bool isOrthographic);
 
 };
 #endif // !CAMERA_H_
