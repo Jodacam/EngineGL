@@ -1,23 +1,26 @@
 #include "stdafx.h"
 #include "Object.h"
 
-void Object::Render()
+
+void Object::InnerUpdate()
 {
+	for (Component* c : ComponentList) {
+		c->UpdateComponent();
+	}
 }
 
-Object::Object()
+Object::Object(const char* fileName, Material* m)
 {
-
+	Renderer = new MeshRenderer(fileName, m);
+	transform = Transform();
 }
 
-void Object::RenderObjectOfType(string type)
+void Object::Render(Camera* c)
 {
-	if (ObjectType == type) {
-		Render();
-	}
-	for (auto child : Children) {
-		child.second->RenderObjectOfType(type);
-	}
+	Renderer->Render(c, transform);
+}
 
-
+void Object::AddComponent(Component * c)
+{
+	ComponentList.push_back(c);
 }

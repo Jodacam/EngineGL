@@ -1,14 +1,18 @@
 #pragma once
 #ifndef CAMERA_H_
 #define CAMERA_H_
-#include "Object.h"
 
-class Camera : Object {
+
+class Camera{
 private:
 
 
 public:
-	Camera(glm::vec3 postion, glm::vec3 direction, bool isOrthographic);
+	glm::mat4 ProyectionMatrix;
+	glm::mat4 ViewMatrix;
+	Camera(glm::vec3 position, glm::vec3 direction, bool isOrthographic,float angle);
+
+	void FixedUpdate();
 
 };
 #endif // !CAMERA_H_

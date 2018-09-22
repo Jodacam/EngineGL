@@ -17,8 +17,8 @@
 
 class Fbo {
 public:
-	 int ucolorBuffTexId;
-	 int uvertexBuffTexId;
+	int ucolorBuffTexId;
+	int uvertexBuffTexId;
 	int uespeBuffTexId;
 	int uemisBuffTexId;
 	int unormalBuffTexId;

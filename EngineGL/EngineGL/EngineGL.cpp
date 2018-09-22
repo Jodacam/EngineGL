@@ -3,6 +3,13 @@
 
 #include "stdafx.h"
 #include "EngineGL.h"
+struct DirrectionalLight
+{	
+	glm::vec3 color;
+	glm::vec3 LocalDirrection;
+	glm::vec3 CameraDirrection;
+
+};
 //Funciones de interrupción, Estan declaradas arriba por que así es las coge siempre bien 
 void renderFunc();
 void resizeFunc(int width, int height);
@@ -16,18 +23,30 @@ void(*mousef)(int button, int state, int x, int y);
 void(*idlef)();
 void(*motionf)(int x, int y);
 void(*resizef)(int w, int h);
-
-
-
+enum class RenderType { FORWARD_RENDER, DEFERED_RENDER };
+RenderType TypeofRender = RenderType::FORWARD_RENDER;
+vector<Object*> ObjectList;
+Camera* MainCamera;
 using namespace std;
+DirrectionalLight LuzPrueba;
+Shader* Diffuse;
 namespace EngineGL
 {
-
 	
+	void Start() {	
+		glutMainLoop();
+	}
+	void CreateCamera(glm::vec3 position, glm::vec3 direction, bool isOrthographic, float angle) {
+		MainCamera = new Camera(position, direction, isOrthographic, angle);
+	}
 	void InitGLContext(int argc, char ** argv)
 	{
+		CreateCamera(glm::vec3(0, 0, -200), glm::vec3(0, 0, 0), false, 90);
+		LuzPrueba.color = glm::vec3(1, 1, 0);
+		LuzPrueba.LocalDirrection = glm::vec3(1, -1, 0);
+		LuzPrueba.CameraDirrection =glm::vec3( MainCamera->ViewMatrix*glm::vec4(LuzPrueba.LocalDirrection,0));
 		glutInit(&argc, argv);
-		glutInitContextVersion(4, 5);
+		glutInitContextVersion(4, 2);
 		glutInitContextProfile(GLUT_CORE_PROFILE);
 
 		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -45,7 +64,7 @@ namespace EngineGL
 		cout << "This system supports OpenGL Version: " << oglVersion << std::endl;
 		glutMotionFunc(motionFunc);
 		glutReshapeFunc(resizeFunc);
-		//glutDisplayFunc(renderFunc);
+		glutDisplayFunc(renderFunc);
 		glutIdleFunc(idleFunc);
 		glutKeyboardFunc(keyboardFunc);
 		glutMouseFunc(mouseFunc);
@@ -54,11 +73,19 @@ namespace EngineGL
 		glFrontFace(GL_CCW);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_CULL_FACE);
-		cout << "Patata";
-		string Hola;
-		cin >> Hola;
-
+		GLuint ubo = 0;		
+	    Diffuse = new Shader("../shaders/Default.vs", "../shaders/Default.fs");		
+		GLint numBlocks;
+		glGetProgramiv(Diffuse->getProgramID(), GL_ACTIVE_UNIFORM_BLOCKS, &numBlocks);
+		glGenBuffers(1, &ubo);
+		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirrectionalLight), &LuzPrueba,GL_DYNAMIC_DRAW );
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBufferRange(GL_UNIFORM_BUFFER,0,ubo,0,sizeof(DirrectionalLight));
+		
 	}
+
+	
 
 	void SetKeyFuction(void(*func)(unsigned char key, int x, int y))
 	{
@@ -79,22 +106,46 @@ namespace EngineGL
 		motionf = func;
 
 	}
+
+	 void AddObject(const char * fileName)
+	{
+		 Object* o = new Object(fileName,new Material(Diffuse));
+		 ObjectList.push_back(o);
+	}
+
+	
+
 }
+
+
+	void renderFunc() {	
+		if (TypeofRender == RenderType::FORWARD_RENDER) {			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//Subimos las Luces al Shader
+			for (int i = 0; i < ObjectList.size(); i++) {
+				ObjectList[i]->Render(MainCamera);
+			}
+		}
+		glUseProgram(NULL);
+		glutSwapBuffers();		
+	}
+
+
 // Termina el NameSpace, Aqui van las funciones auxiliares.
 	void resizeFunc(int width, int height) {
 		glutPostRedisplay();
 	}
 	void idleFunc() {
-		idlef();
+		
 		glutPostRedisplay();
 
 	}
 	void keyboardFunc(unsigned char key, int x, int y) {
-		keyf(key, x, y);
+		MainCamera->ViewMatrix = glm::rotate(MainCamera->ViewMatrix, 1.0f,glm::vec3(0,1,0));
 		glutPostRedisplay();
 	}
 	void mouseFunc(int button, int state, int x, int y) {
-		mousef(button, state, x, y);
+		
 		glutPostRedisplay();
 
 
@@ -102,6 +153,9 @@ namespace EngineGL
 
 
 void motionFunc(int x, int y) {
-	motionf(x, y);
+	
 	glutPostRedisplay();
 }
+
+
+
