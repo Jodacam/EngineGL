@@ -11,7 +11,7 @@ class MeshRenderer {
 		Material* mainMaterial;
 	public:
 		 //Render this Mesh in the camera view 
-		void Render(const Camera* c, Transform &transform);
+		void Render( Camera* c, Transform &transform);
 		MeshRenderer(const char* fileName, Material* m);
 
 

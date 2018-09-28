@@ -1,5 +1,3 @@
-﻿  main.cpp
-e:\git\motorproyecto\enginegl\enginegl\libs\include\objeto3d.h(123): warning C4554: '&': compruebe la prioridad de operador para posibles errores; utilice paréntesis para indicar la prioridad
+﻿  CameraTransform.cpp
   GLM: rotate function taking degrees as a parameter is deprecated. #define GLM_FORCE_RADIANS before including GLM headers to remove this message.
-  EngineGL.vcxproj -> E:\Git\MotorProyecto\EngineGL\EngineGL\Debug\EngineGL.exe
-  EngineGL.vcxproj -> E:\Git\MotorProyecto\EngineGL\EngineGL\Debug\EngineGL.pdb (Full PDB)
+  EngineGL.vcxproj -> C:\Git\EngineGL\EngineGL\EngineGL\Debug\EngineGL.exe

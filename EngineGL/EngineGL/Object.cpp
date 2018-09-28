@@ -12,6 +12,7 @@ void Object::InnerUpdate()
 Object::Object(const char* fileName, Material* m)
 {
 	Renderer = new MeshRenderer(fileName, m);
+
 	transform = Transform();
 }
 

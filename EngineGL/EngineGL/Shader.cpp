@@ -68,11 +68,8 @@ Shader::Shader(const char * vertexShader, const char * fragmentShader)
 		exit(-1);
 	}
 	
-	int h = glGetAttribLocation(programID, "inColor");
-	int c = glGetUniformLocation(programID, "modelView");
-	int t = glGetUniformLocation(programID, "modelViewProj");
-	int y = glGetUniformLocation(programID, "normalMatrix");
-	unsigned int dirLightIndex = glGetUniformBlockIndex(programID, "DirLight");
+	
+	unsigned int dirLightIndex = glGetUniformBlockIndex(programID, "DirectionalLights");
 	glUniformBlockBinding(programID, dirLightIndex, 0);
 
 }

@@ -56,7 +56,7 @@ class Material {
 		void SetVector(const char* name, glm::vec3 value);
 		void SetVector(const char* name, glm::vec4 value);
 		void SetMatrix(const char* name, glm::mat3 value);
-		static Material* GetMaterialOfType(MaterialTypes type);
+		static Material* CreateMaterialOfType(MaterialTypes type);
 		void BlindTextures();
 		Shader* getShader() { return shader; };
 		Material(Shader* s);

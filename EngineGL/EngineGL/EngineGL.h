@@ -4,7 +4,6 @@
 #define ENGINE_GL __declspec(dllexport)
  // EngineGL_H_
 #include <gl/glew.h>
-#include <gl/gl.h>
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags

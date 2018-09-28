@@ -2,11 +2,12 @@
 #include "stdafx.h"
 #include "MeshRenderer.h"
 
-void MeshRenderer::Render(const Camera* c, Transform &transform) {
+void MeshRenderer::Render( Camera* c, Transform &transform) {
 	//Set up the matrix uniforms
-	glm::mat4 modelView = c->ViewMatrix * transform.getModel();
+	glm::mat4 modelView = c->getView() * transform.getModel();
 	glm::mat4 modelViewProj = c->ProyectionMatrix*modelView;
 	glm::mat4 normal = glm::transpose(glm::inverse(modelView));
+
 	Shader* ActualShader = mainMaterial->getShader();
 	ActualShader->UseShader();
 	ActualShader->SetMatrix("modelView", modelView);

@@ -6,7 +6,7 @@ using namespace std;
 int main(int argc, char **argv)
 {
 	EngineGL::InitGLContext(argc, argv);
-	EngineGL::AddObject("../Assets/Crate1.obj");
+	EngineGL::AddObject("../Assets/lowpolytree.fbx");
 	EngineGL::Start();
 	
 	string s;

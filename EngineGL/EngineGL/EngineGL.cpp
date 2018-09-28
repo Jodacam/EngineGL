@@ -5,9 +5,9 @@
 #include "EngineGL.h"
 struct DirrectionalLight
 {	
-	glm::vec3 color;
-	glm::vec3 LocalDirrection;
-	glm::vec3 CameraDirrection;
+	glm::vec3 Dir;
+	glm::vec3 Color;
+	glm::vec3 CameraDir;
 
 };
 //Funciones de interrupción, Estan declaradas arriba por que así es las coge siempre bien 
@@ -25,7 +25,10 @@ void(*motionf)(int x, int y);
 void(*resizef)(int w, int h);
 enum class RenderType { FORWARD_RENDER, DEFERED_RENDER };
 RenderType TypeofRender = RenderType::FORWARD_RENDER;
+
 vector<Object*> ObjectList;
+
+
 Camera* MainCamera;
 using namespace std;
 DirrectionalLight LuzPrueba;
@@ -34,17 +37,19 @@ namespace EngineGL
 {
 	
 	void Start() {	
+		
 		glutMainLoop();
+		
 	}
 	void CreateCamera(glm::vec3 position, glm::vec3 direction, bool isOrthographic, float angle) {
 		MainCamera = new Camera(position, direction, isOrthographic, angle);
 	}
 	void InitGLContext(int argc, char ** argv)
 	{
-		CreateCamera(glm::vec3(0, 0, -200), glm::vec3(0, 0, 0), false, 90);
-		LuzPrueba.color = glm::vec3(1, 1, 0);
-		LuzPrueba.LocalDirrection = glm::vec3(1, -1, 0);
-		LuzPrueba.CameraDirrection =glm::vec3( MainCamera->ViewMatrix*glm::vec4(LuzPrueba.LocalDirrection,0));
+		CreateCamera(glm::vec3(0, 1, -200), glm::vec3(0,90.0f,0), false, 90);
+		LuzPrueba.Color = glm::vec3(0, 0, 1);
+		LuzPrueba.Dir = glm::vec3(1, -1, 0);
+		LuzPrueba.CameraDir = glm::vec3( MainCamera->getView()*glm::vec4(LuzPrueba.Dir,0));
 		glutInit(&argc, argv);
 		glutInitContextVersion(4, 2);
 		glutInitContextProfile(GLUT_CORE_PROFILE);
@@ -58,7 +63,7 @@ namespace EngineGL
 		if (GLEW_OK != err)
 		{
 			std::cout << "Error: " << glewGetErrorString(err) << std::endl;
-			exit(-1);
+			
 		}
 		const GLubyte *oglVersion = glGetString(GL_VERSION);
 		cout << "This system supports OpenGL Version: " << oglVersion << std::endl;
@@ -141,7 +146,28 @@ namespace EngineGL
 
 	}
 	void keyboardFunc(unsigned char key, int x, int y) {
-		MainCamera->ViewMatrix = glm::rotate(MainCamera->ViewMatrix, 1.0f,glm::vec3(0,1,0));
+		switch (key)
+		{
+		case 'w':
+			MainCamera->transform.Rotate(Vector3(1, 0, 0));
+			cout << MainCamera->transform.getRotation().getX() << "  ";
+			break;
+		case 's':
+			MainCamera->transform.Rotate(Vector3(-1, 0, 0));
+			cout << MainCamera->transform.getRotation().getX() << "  ";
+			break;
+		case 'a':
+			MainCamera->transform.Rotate(Vector3(0,1,0));
+			cout << ObjectList[0]->transform.getRotation().getY()<< "  ";
+			break;
+		case 'd':
+			MainCamera->transform.Rotate(Vector3(0, -1, 0));
+			cout << ObjectList[0]->transform.getRotation().getY() << "  ";
+			break;
+		default:
+			
+			break;
+		}
 		glutPostRedisplay();
 	}
 	void mouseFunc(int button, int state, int x, int y) {

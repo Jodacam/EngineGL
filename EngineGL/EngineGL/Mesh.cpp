@@ -61,12 +61,12 @@ Mesh::Mesh(const char * fileName)
 	unsigned int miNumVertex = scene->mMeshes[0]->mNumVertices;
 	unsigned int miNumFaces = scene->mMeshes[0]->mNumFaces;
 
-	unsigned int miVertexIndex[9000 * 3];
-	float miVertexPos[9000 * 3];
-	float miModelColor[9000 * 3];
-	float miNormals[9000 * 3];
-	float miTexCoord[9000 * 2];
-	float miVertexTang[9000 * 3];
+	std::vector<unsigned int> miVertexIndex(miNumVertex*3);
+	std::vector<float> miVertexPos(miNumVertex*3);
+	std::vector<float> miModelColor(miNumVertex * 3);
+	std::vector<float> miNormals(miNumVertex * 3);
+	std::vector<float> miTexCoord(miNumVertex * 2);
+	std::vector<float> miVertexTang(miNumVertex * 3);
 	std::cout << miNumFaces << " " << miNumVertex << std::endl;
 
 
@@ -106,21 +106,24 @@ Mesh::Mesh(const char * fileName)
 	}
 
 	aux = 0;
-	for (int i = 0; i < miNumVertex; i++) {
-		for (int j = 0; j < 2; j++) {
-			miTexCoord[aux] = scene->mMeshes[0]->mTextureCoords[0][i][j];
-			aux++;
+	if (scene->mMeshes[0]->HasTextureCoords(0)) {
+		for (int i = 0; i < miNumVertex; i++) {
+			for (int j = 0; j < 2; j++) {
+				miTexCoord[aux] = scene->mMeshes[0]->mTextureCoords[0][i][j];
+				aux++;
+			}
 		}
 	}
 	aux = 0;
-
-	for (int i = 0; i < miNumVertex; i++) {
-		for (int j = 0; j < 3; j++) {
-			miVertexTang[aux] = scene->mMeshes[0]->mTangents[i][j];
-			aux++;
+	if (scene->mMeshes[0]->HasTangentsAndBitangents()) {
+		for (int i = 0; i < miNumVertex; i++) {
+			for (int j = 0; j < 3; j++) {
+				miVertexTang[aux] = scene->mMeshes[0]->mTangents[i][j];
+				aux++;
+			}
 		}
 	}
-	initMesh(miNumVertex, miVertexPos, miModelColor, miNormals, miTexCoord, miNumFaces, miVertexIndex, miVertexTang);
+	initMesh(miNumVertex, &miVertexPos[0], &miModelColor[0],&miNormals[0], &miTexCoord[0], miNumFaces, &miVertexIndex[0], &miVertexTang[0]);
 }
 
 void Mesh::DrawMesh()

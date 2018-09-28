@@ -73,7 +73,7 @@ void Material::SetTexture(const char * name, const char * fileName)
 	}
 	else
 	{
-		printf("That Texture Don't Exist");
+		printf("That Texture Doesn't Exist");
 	}
 
 
@@ -152,7 +152,7 @@ void Material::SetMatrix(const char * name, glm::mat3 value)
 	}
 }
 
-Material* Material::GetMaterialOfType(MaterialTypes type)
+Material* Material::CreateMaterialOfType(MaterialTypes type)
 {
 	Material* m = nullptr;
 	switch (type)
@@ -178,8 +178,8 @@ void Material::BlindTextures()
 	int TextureId = 0;
 	for (auto const &sampler : samplers) {
 		glActiveTexture(GL_TEXTURE0 + TextureId);
-		glBindTexture(GL_TEXTURE_2D, sampler.second);		
 		shader->SetInt(sampler.first.c_str(), sampler.second);
+		glBindTexture(GL_TEXTURE_2D, sampler.second);				
 		TextureId++;
 	}
 

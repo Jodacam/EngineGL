@@ -9,16 +9,22 @@ uniform mat4 modelViewProj;
 uniform mat4 modelView;
 uniform mat4 normalMatrix;
 
-layout(shared) uniform DirLight{
-    vec3 color;
-    vec3 LocalDirrection;
-    vec3 CameraDirrection;
+struct DirLight {
+    vec3 Dir;
+    vec3 Color;
+    vec3 CameraDir;
+};
+
+layout(shared) uniform DirectionalLights{
+ 	DirLight DLight[2];
 };
 
 out vec3 incolor;
 out vec3 pos;
 out vec3 norm;
 out vec2 texCoord;
+
+
 
 
 void main()

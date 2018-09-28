@@ -16,8 +16,10 @@ public:
 	void SetVector(const char* name, glm::vec4 value);
 	void SetMatrix(const char* name, glm::mat3 value);
 	void UseShader();
-	int getProgramID()  { return programID; };
+	inline int getProgramID()  { return programID; };
 
 
-};
+};   
+     
+     
 #endif

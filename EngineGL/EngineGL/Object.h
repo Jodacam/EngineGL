@@ -17,7 +17,7 @@ private:
 	vector<Component*> ComponentList;
 	map<string, Object*> Children;
 	string ObjectType;
-	Transform transform;
+	
 	MeshRenderer* Renderer;
 public:
 		void Render(Camera* c);
@@ -26,7 +26,7 @@ public:
 		//Called Before FixedUpdate To Call all component Update, it can not be modified
 		void InnerUpdate();
 		Object(const char* fileName,Material* m);
-		
+		Transform transform;
 		void AddComponent(Component* c);
 
 
