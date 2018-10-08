@@ -157,7 +157,6 @@
   <ItemGroup>
     <ClInclude Include="auxiliar.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CameraTransform.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EngineGL.h" />
     <ClInclude Include="Material.h" />
@@ -173,7 +172,6 @@
   <ItemGroup>
     <ClCompile Include="auxiliar.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CameraTransform.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

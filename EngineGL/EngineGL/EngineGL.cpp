@@ -28,7 +28,7 @@ RenderType TypeofRender = RenderType::FORWARD_RENDER;
 
 vector<Object*> ObjectList;
 
-
+GLuint ubo;
 Camera* MainCamera;
 using namespace std;
 DirrectionalLight LuzPrueba;
@@ -46,7 +46,7 @@ namespace EngineGL
 	}
 	void InitGLContext(int argc, char ** argv)
 	{
-		CreateCamera(glm::vec3(0, 1, -200), glm::vec3(0,90.0f,0), false, 90);
+		CreateCamera(glm::vec3(0, 0, -10), glm::vec3(0,180.0f,0), false, 90.0f);
 		LuzPrueba.Color = glm::vec3(0, 0, 1);
 		LuzPrueba.Dir = glm::vec3(1, -1, 0);
 		LuzPrueba.CameraDir = glm::vec3( MainCamera->getView()*glm::vec4(LuzPrueba.Dir,0));
@@ -78,10 +78,9 @@ namespace EngineGL
 		glFrontFace(GL_CCW);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_CULL_FACE);
-		GLuint ubo = 0;		
+		ubo = 0;		
 	    Diffuse = new Shader("../shaders/Default.vs", "../shaders/Default.fs");		
-		GLint numBlocks;
-		glGetProgramiv(Diffuse->getProgramID(), GL_ACTIVE_UNIFORM_BLOCKS, &numBlocks);
+		
 		glGenBuffers(1, &ubo);
 		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirrectionalLight), &LuzPrueba,GL_DYNAMIC_DRAW );
@@ -124,6 +123,11 @@ namespace EngineGL
 
 
 	void renderFunc() {	
+		MainCamera->UpdateView();
+		LuzPrueba.CameraDir = glm::vec3(MainCamera->getView()*glm::vec4(LuzPrueba.Dir, 0));
+		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirrectionalLight), &LuzPrueba, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		if (TypeofRender == RenderType::FORWARD_RENDER) {			
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//Subimos las Luces al Shader
@@ -149,20 +153,16 @@ namespace EngineGL
 		switch (key)
 		{
 		case 'w':
-			MainCamera->transform.Rotate(Vector3(1, 0, 0));
-			cout << MainCamera->transform.getRotation().getX() << "  ";
+			ObjectList[0]->transform.Rotate(Vector3(0, 1, 0));		
 			break;
 		case 's':
-			MainCamera->transform.Rotate(Vector3(-1, 0, 0));
-			cout << MainCamera->transform.getRotation().getX() << "  ";
+			ObjectList[0]->transform.Rotate(Vector3(0, -1, 0));
 			break;
 		case 'a':
-			MainCamera->transform.Rotate(Vector3(0,1,0));
-			cout << ObjectList[0]->transform.getRotation().getY()<< "  ";
+			LuzPrueba.Color = glm::vec3(1, 0, 0);			
 			break;
 		case 'd':
-			MainCamera->transform.Rotate(Vector3(0, -1, 0));
-			cout << ObjectList[0]->transform.getRotation().getY() << "  ";
+			MainCamera->transform.Rotate(Vector3(0, 1, 0));
 			break;
 		default:
 			

@@ -5,8 +5,20 @@
 
 Camera::Camera(glm::vec3 position, glm::vec3 direction, bool isOrthographic,float angle) {
 	
-	ProyectionMatrix = glm::perspective(glm::radians(angle), 1.0f, 0.1f, 1000.0f);
+	if(!isOrthographic)
+	ProyectionMatrix = glm::perspective(angle, 1.0f, 0.1f, 100.0f);
+	else
+	{
+		ProyectionMatrix = glm::ortho(-10, 10, -10, 10,0,1000);
+	}
 	
-	transform = CameraTransform(Vector3(position),Vector3(direction),Vector3::Identity);
+	
+	transform = Transform(Vector3(position),Vector3(direction),Vector3::Identity);
+	UpdateView();
 	  
+}
+
+void Camera::UpdateView()
+{
+	viewMatrix = glm::inverse(transform.getModel());
 }

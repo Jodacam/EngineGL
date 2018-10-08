@@ -60,13 +60,12 @@ Mesh::Mesh(const char * fileName)
 	scene = importer.ReadFile(fileName, aiProcessPreset_TargetRealtime_Fast);
 	unsigned int miNumVertex = scene->mMeshes[0]->mNumVertices;
 	unsigned int miNumFaces = scene->mMeshes[0]->mNumFaces;
-
-	std::vector<unsigned int> miVertexIndex(miNumVertex*3);
-	std::vector<float> miVertexPos(miNumVertex*3);
-	std::vector<float> miModelColor(miNumVertex * 3);
-	std::vector<float> miNormals(miNumVertex * 3);
-	std::vector<float> miTexCoord(miNumVertex * 2);
-	std::vector<float> miVertexTang(miNumVertex * 3);
+std::vector<unsigned int> miVertexIndex(miNumVertex*3);
+	   std::vector<float> miVertexPos(miNumVertex*3);
+	   std::vector<float> miModelColor(miNumVertex * 3);
+	   std::vector<float> miNormals(miNumVertex * 3);
+	   std::vector<float> miTexCoord(miNumVertex * 2);
+	   std::vector<float> miVertexTang(miNumVertex * 3);
 	std::cout << miNumFaces << " " << miNumVertex << std::endl;
 
 
@@ -123,6 +122,12 @@ Mesh::Mesh(const char * fileName)
 			}
 		}
 	}
+	miVertexIndex2	= miVertexIndex;
+	miVertexPos2 = miVertexPos;
+	miModelColor2 = miModelColor;
+	miNormals2 = miNormals;
+	miTexCoord2 = miTexCoord;
+	miVertexTang2 = miVertexTang;
 	initMesh(miNumVertex, &miVertexPos[0], &miModelColor[0],&miNormals[0], &miTexCoord[0], miNumFaces, &miVertexIndex[0], &miVertexTang[0]);
 }
 

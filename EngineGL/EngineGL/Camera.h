@@ -1,18 +1,20 @@
 #pragma once
 #ifndef CAMERA_H_
 #define CAMERA_H_
-#include "CameraTransform.h"
+#include "Transform.h"
 
 class Camera{
 private:
-
-
-public:
 	glm::mat4 ProyectionMatrix;
+	glm::mat4 viewMatrix;
+public:
 	
-	CameraTransform transform;
+	
+	Transform transform;
 	Camera(glm::vec3 position, glm::vec3 direction, bool isOrthographic,float angle);
-	inline glm::mat4 getView() { return transform.getModel(); };
+	inline glm::mat4 getView() { return viewMatrix; };
+	inline glm::mat4 getProyectionMatrix () { return ProyectionMatrix; }
+	void UpdateView();
 	
 
 };

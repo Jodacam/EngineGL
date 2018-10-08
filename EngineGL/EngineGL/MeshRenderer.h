@@ -7,9 +7,10 @@
 #include "Camera.h"
 class MeshRenderer {
 	private:
-		Mesh* mainMesh;
+		
 		Material* mainMaterial;
 	public:
+		Mesh * mainMesh;
 		 //Render this Mesh in the camera view 
 		void Render( Camera* c, Transform &transform);
 		MeshRenderer(const char* fileName, Material* m);
