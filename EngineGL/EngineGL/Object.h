@@ -26,6 +26,9 @@ public:
 		//Called Before FixedUpdate To Call all component Update, it can not be modified
 		void InnerUpdate();
 		Object(const char* fileName,Material* m);
+
+
+		Object(const char* fileName, Material* m,Vector3 position, Vector3 rotation);
 		Transform transform;
 		void AddComponent(Component* c);
 

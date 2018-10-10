@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "EngineGL.h"
+
 struct DirrectionalLight
 {	
 	glm::vec3 Dir;
@@ -23,73 +24,73 @@ void(*mousef)(int button, int state, int x, int y);
 void(*idlef)();
 void(*motionf)(int x, int y);
 void(*resizef)(int w, int h);
-enum class RenderType { FORWARD_RENDER, DEFERED_RENDER };
-RenderType TypeofRender = RenderType::FORWARD_RENDER;
-
-vector<Object*> ObjectList;
-
 GLuint ubo;
-Camera* MainCamera;
+
+std::vector<IRenderEvent*> renderEvent;
 using namespace std;
 DirrectionalLight LuzPrueba;
 Shader* Diffuse;
 namespace EngineGL
 {
-	
-	void Start() {	
-		
-		glutMainLoop();
-		
-	}
-	void CreateCamera(glm::vec3 position, glm::vec3 direction, bool isOrthographic, float angle) {
-		MainCamera = new Camera(position, direction, isOrthographic, angle);
-	}
-	void InitGLContext(int argc, char ** argv)
-	{
-		CreateCamera(glm::vec3(0, 0, -10), glm::vec3(0,180.0f,0), false, 90.0f);
-		LuzPrueba.Color = glm::vec3(0, 0, 1);
-		LuzPrueba.Dir = glm::vec3(1, -1, 0);
-		LuzPrueba.CameraDir = glm::vec3( MainCamera->getView()*glm::vec4(LuzPrueba.Dir,0));
-		glutInit(&argc, argv);
-		glutInitContextVersion(4, 2);
-		glutInitContextProfile(GLUT_CORE_PROFILE);
 
-		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-		glutInitWindowSize(500, 500);
-		glutInitWindowPosition(0, 0);
-		glutCreateWindow("EngineGL");
 
-		GLenum err = glewInit();
-		if (GLEW_OK != err)
-		{
-			std::cout << "Error: " << glewGetErrorString(err) << std::endl;
-			
-		}
-		const GLubyte *oglVersion = glGetString(GL_VERSION);
-		cout << "This system supports OpenGL Version: " << oglVersion << std::endl;
+	void Start() {			
+		
+		
 		glutMotionFunc(motionFunc);
 		glutReshapeFunc(resizeFunc);
 		glutDisplayFunc(renderFunc);
 		glutIdleFunc(idleFunc);
 		glutKeyboardFunc(keyboardFunc);
 		glutMouseFunc(mouseFunc);
+		glGenBuffers(1, &ubo);
+		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirrectionalLight), &LuzPrueba, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, sizeof(DirrectionalLight));
+		glutMainLoop();
+		
+	}
+
+	 OpenGLScene CreateScene(int width, int height, const char* name)
+	{
+		return  OpenGLScene(width,height,name);
+	}
+	 
+	  void BindRenderEvent(IRenderEvent * event)
+	 {
+		  renderEvent.push_back(event);
+		  
+	 }
+	
+	void InitGLContext(int argc, char ** argv)
+	{		
+		glutInit(&argc, argv);
+		glutInitContextVersion(4, 2);
+		glutInitContextProfile(GLUT_CORE_PROFILE);
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	}
+
+
+	int OpenWindow(int w, int h,const char* name ) {
+		glutInitWindowSize(w, h);
+		glutInitWindowPosition(0, 0);
+		int id = glutCreateWindow(name);
+		GLenum err = glewInit();
+		if (GLEW_OK != err)
+		{
+			std::cout << "Error: " << glewGetErrorString(err) << std::endl;
+		}
+		const GLubyte *oglVersion = glGetString(GL_VERSION);
+		cout << "This system supports OpenGL Version: " << oglVersion << std::endl;
+
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glFrontFace(GL_CCW);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_CULL_FACE);
-		ubo = 0;		
-	    Diffuse = new Shader("../shaders/Default.vs", "../shaders/Default.fs");		
-		
-		glGenBuffers(1, &ubo);
-		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirrectionalLight), &LuzPrueba,GL_DYNAMIC_DRAW );
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		glBindBufferRange(GL_UNIFORM_BUFFER,0,ubo,0,sizeof(DirrectionalLight));
-		
+		return id;
 	}
-
-	
 
 	void SetKeyFuction(void(*func)(unsigned char key, int x, int y))
 	{
@@ -111,11 +112,12 @@ namespace EngineGL
 
 	}
 
-	 void AddObject(const char * fileName)
+	 void SetRenderFunc(void(*func)())
 	{
-		 Object* o = new Object(fileName,new Material(Diffuse));
-		 ObjectList.push_back(o);
+		 glutDisplayFunc(func);
 	}
+
+
 
 	
 
@@ -123,20 +125,10 @@ namespace EngineGL
 
 
 	void renderFunc() {	
-		MainCamera->UpdateView();
-		LuzPrueba.CameraDir = glm::vec3(MainCamera->getView()*glm::vec4(LuzPrueba.Dir, 0));
-		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirrectionalLight), &LuzPrueba, GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		if (TypeofRender == RenderType::FORWARD_RENDER) {			
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//Subimos las Luces al Shader
-			for (int i = 0; i < ObjectList.size(); i++) {
-				ObjectList[i]->Render(MainCamera);
-			}
+		for each (auto var in renderEvent)
+		{
+			(*var)();
 		}
-		glUseProgram(NULL);
-		glutSwapBuffers();		
 	}
 
 
@@ -153,16 +145,16 @@ namespace EngineGL
 		switch (key)
 		{
 		case 'w':
-			ObjectList[0]->transform.Rotate(Vector3(0, 1, 0));		
+					
 			break;
 		case 's':
-			ObjectList[0]->transform.Rotate(Vector3(0, -1, 0));
+			
 			break;
 		case 'a':
-			LuzPrueba.Color = glm::vec3(1, 0, 0);			
+						
 			break;
 		case 'd':
-			MainCamera->transform.Rotate(Vector3(0, 1, 0));
+			
 			break;
 		default:
 			
@@ -171,7 +163,11 @@ namespace EngineGL
 		glutPostRedisplay();
 	}
 	void mouseFunc(int button, int state, int x, int y) {
-		
+		ClickInfomation click;
+		click.button = button;
+		click.x = x;
+		click.y = y;
+		click.state = state;
 		glutPostRedisplay();
 
 

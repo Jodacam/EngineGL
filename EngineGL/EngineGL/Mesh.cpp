@@ -60,13 +60,13 @@ Mesh::Mesh(const char * fileName)
 	scene = importer.ReadFile(fileName, aiProcessPreset_TargetRealtime_Fast);
 	unsigned int miNumVertex = scene->mMeshes[0]->mNumVertices;
 	unsigned int miNumFaces = scene->mMeshes[0]->mNumFaces;
-std::vector<unsigned int> miVertexIndex(miNumVertex*3);
+	   std::vector<unsigned int> miVertexIndex(miNumVertex*3);
 	   std::vector<float> miVertexPos(miNumVertex*3);
 	   std::vector<float> miModelColor(miNumVertex * 3);
 	   std::vector<float> miNormals(miNumVertex * 3);
 	   std::vector<float> miTexCoord(miNumVertex * 2);
 	   std::vector<float> miVertexTang(miNumVertex * 3);
-	std::cout << miNumFaces << " " << miNumVertex << std::endl;
+	   std::cout << miNumFaces << " " << miNumVertex << std::endl;
 
 
 	int aux = 0;
